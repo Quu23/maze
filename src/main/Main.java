@@ -8,6 +8,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class Main extends Application{
@@ -17,13 +18,16 @@ public class Main extends Application{
          new Wall(250, 0  , 251, 500),new Wall(0  , 0  , 1  , 500)
         ,new Wall(0,   0  , 250, 1)  ,new Wall(0  , 500, 250, 500)
         
-        ,new Wall(100,100,200,100),new Wall(200, 100, 201, 200)
-        ,new Wall(100,100, 101,200),new Wall(101, 200, 200, 200)
+        ,new Wall(50,100,200,100),new Wall(200, 100, 201, 150)
+        ,new Wall(100, 150, 101, 190),new Wall(50, 100, 51, 250)
+        ,new Wall(100, 200, 200, 200),new Wall(100, 150, 200, 150)
+        ,new Wall(50, 250, 200, 250),new Wall(200, 200, 201, 250)
 
     };
 
     static GraphicsContext g ;
     static Player player;
+    static boolean isClear = false;
     //                                 W     S    A     D   ENTER
     static boolean[] pressedKeys = {false,false,false,false,false};
 
@@ -51,7 +55,7 @@ public class Main extends Application{
         stage.setResizable(false);
         stage.show();
 
-        player = new Player(125,150,45);
+        player = new Player(125,130,45);
 
 
         AnimationTimer timer = new AnimationTimer() {
@@ -61,9 +65,8 @@ public class Main extends Application{
                 if(pressedKeys[2])player.moveViewPoint(-2);
                 if(pressedKeys[3])player.moveViewPoint(2);  
                 if(((pressedKeys[0])&&player.isCanMove)){
-                    // 前に進むか後ろに進むか。
                     player.move(player.lineLocation[(player.lineLocation.length-1)/2][0],player.lineLocation[(player.lineLocation.length-1)/2][1]);
-                }        
+                }    
             }            
         };
         timer.start();
@@ -126,6 +129,18 @@ public class Main extends Application{
         if(pressedKeys[1]){
             g.setFill(Color.CYAN);
             g.fillOval(player.x, player.y, 10, 10);
+        }
+
+        if((player.x-195)*(player.x-195)+(player.y-175)*(player.y-175)<100){
+            isClear=true;
+        }
+        if(isClear){
+            g.setFill(Color.BLACK);
+            g.fillRect(0, 0, 500, 500);
+            g.setFont(new Font(100));
+            g.setFill(Color.YELLOW);
+            g.fillText("Clear",100,250);
+            player.isCanMove = false;
         }
     }
 
